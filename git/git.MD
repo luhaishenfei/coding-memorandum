@@ -1,3 +1,27 @@
+# Baise
+
+
+# ---branch option---
+# 列出分支
+git branch
+
+# 切换分支
+git checkout 分支名
+
+# 创建新分支并立即切换到该分支下
+git checkout -b (branchname)
+
+# 删除分支
+git branch -d (branchname)
+
+# 分支合并
+
+# 将 分支1 合并到当前分支去
+git merge 分支1
+
+
+
+
 git add -A
 
 # push本地分支到远程github不存在分支
