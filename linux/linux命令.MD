@@ -17,13 +17,120 @@ sudo systemctl start ssh
 sudo systemctl enable ssh
 
 
-# 解决 E: Unable to lock directory /var/lib/apt/lists/ 问题
-sudo fuser -vki /var/lib/apt/lists/lock
+# 安装lrzsz ，可以通过Xshell 往linux里传文件
+sudo apt install lrzsz
 
-sudo apt update
 
 # 安装curl
 sudo apt install curl
+
+# 安装jdk
+1.将jdk.tar.gz上传至自己创建的文件夹中
+2.解压
+tar -zxvf jdk.tar.gz
+ 2.1为了待会配置环境变量的时候方便，将文件夹名字改为jdk
+ mv jdk1.8.0_161/ jdk
+3.配置环境变量
+移动到根目录
+cd ../..
+用vim编辑etc/profile文件，在最下面根据jdk文件位置添加如下信息
+JAVA_HOME=/home/lsgf/environment/jdk/jdk1.8.0_161
+PATH=/home/lsgf/environment/jdk/jdk1.8.0_161/bin:$PATH
+export JAVA_HOME PATH
+按ESC后输入:wq推出并保存
+4.重新加载此文件
+source /etc/profile
+5.测试
+javac
+
+
+# 安装zookeeper
+1.安装curl
+sudo apt install curl
+2.将apache-zookeeper-3.8.0-bin.tar.gz上传至linux文件夹中
+3.在文件夹下使用命令解压
+tar -zxvf apache-zookeeper-3.8.0-bin.tar.gz
+4.进入到conf目录拷贝一个zoo_sample.cfg并完成配置
+cd apache-zookeeper-3.8.0-bin/conf
+cp  zoo_sample.cfg  zoo.cfg
+5.在合适目录创建data文件夹
+cd ..
+mkdir  data
+6.修改zoo.cfg
+vim conf/zoo.cfg
+ 6.1若报错，则需安装vim，命令如下：
+ sudo apt install vim
+修改存储目录：
+dataDir=/???/ZooKeeper/zkdata
+
+7.启动zk
+在bin/目录下启动server
+./zkServer.sh  start
+ 7.1若报错Error: JAVA_HOME is not set and java could not be found in PATH.则需安装JAVA环境并配置环境变量
+
+
+# 安装redis
+1.安装redis之前先安装C++编译环境，使用以下命令查看目前服务器上gcc的版本：
+gcc -v
+    1.1 Linux系统没有安装gcc编译器，du会提示“Command not found，则按以下步骤安装gcc -c++
+    sudo apt update
+    sudo apt install build-essential
+    安装后再查看下gcc版本
+    gcc -v
+2.上官网下载Redis 压缩包，地址：https://redis.io/download 下载稳定版即可
+3.将压缩包拷贝到Linux服务器中，一般服务器之外的第三方软件装在opt这个文件夹中，执行解压操作。
+tar xzf redis-6.0.4.tar.gz
+4.进入到解压后的路径
+cd redis-6.0.4
+5.编译
+make
+6.编译完成后进入src目录下
+cd src
+7.开启redis服务
+./redis-server
+8.启动成功后会显示redis的pid，如有需要，按住crtl+c 可以退出服务.
+
+
+
+# 安装yum命令
+1.安装
+sudo apt install yum
+如果报错，在ubuntu下按顺序执行以下步骤
+1.在根目录下执行以下操作，备份sources.list文件
+sudo cp /etc/apt/sources.list /etc/apt/sources.list.bak
+2.打开sources.list文件
+sudo gedit /etc/apt/sources.list
+3.删除源文件所有数据
+4.粘贴以下内容到文件中
+
+# 默认注释了源码镜像以提高 apt update 速度，如有需要可自行取消注释
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-updates main restricted universe multiverse
+deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
+# deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-backports main restricted universe multiverse
+# deb https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse
+# # deb-src https://mirrors.tuna.tsinghua.edu.cn/ubuntu/ jammy-security main restricted universe multiverse
+deb http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+# deb-src http://security.ubuntu.com/ubuntu/ jammy-security main restricted universe multiverse
+
+ 4.1 如果以上链接失效，可去网站https://mirrors.tuna.tsinghua.edu.cn/，找到Ubuntu，点击它旁边的问号！重要！点问号！进去之后就会发现你想要的源
+
+5.更新下
+sudo apt-get update
+6.最后我们最开始的需求是，安装yum
+sudo apt-get install yum
+
+
+
+
+sudo apt update
+
+
+# 解决 E: Unable to lock directory /var/lib/apt/lists/ 问题
+sudo fuser -vki /var/lib/apt/lists/lock
+
 
 # 安装docker 若下面命令不行，可尝试：curl -sSL https://get.daocloud.io/docker | sh
 curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
@@ -37,7 +144,13 @@ docker run hello-world
 
 
 
+
 # 1.linux常用命令
+
+# 删除文件
+rm -f 文件名
+# 删除文件夹
+rm -rf 文件夹
 
 
 ping：查看与某主机是否能联通
