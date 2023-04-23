@@ -1,28 +1,32 @@
 # linux安装后配置
 
 
-# 1. 查看网络接口详情，需要 net-tools 工具包，若没有被默认安装，就不能使用 ifconfig，安装 net-tools命令：
+# 安装使用ifconfig命令
+1. 查看网络接口详情，需要 net-tools 工具包，若没有被默认安装，就不能使用 ifconfig，安装 net-tools命令：
 sudo apt-get install net-tools
-# 查看网络接口详情：
+2.查看网络接口详情：
 ifconfig
 
 
-# 2. 安装 OpenSSH 服务器，安装完成后，就可以通过Xshell等访问
+# 安装 OpenSSH 服务器
+1.安装完成后，就可以通过Xshell等访问
 sudo apt install openssh-server
-# 安装完成后，请确保 OpenSSH 服务器已启动。通过运行以下命令来检查它的状态：
+2.安装完成后，请确保 OpenSSH 服务器已启动。通过运行以下命令来检查它的状态：
 sudo systemctl status ssh
-# 如果 OpenSSH 服务器尚未启动，通过运行以下命令来启动它：
-sudo systemctl start ssh
-# 设定 OpenSSH 服务器随系统启动而自动启动，运行以下命令：
+    2.1如果 OpenSSH 服务器尚未启动，通过运行以下命令来启动它：
+    sudo systemctl start ssh
+3.设定 OpenSSH 服务器随系统启动而自动启动，运行以下命令：
 sudo systemctl enable ssh
 
 
-# 安装lrzsz ，可以通过Xshell 往linux里传文件
+# 安装lrzsz
+0.可以通过Xshell 往linux里传文件
 sudo apt install lrzsz
 
 
 # 安装curl
 sudo apt install curl
+
 
 # 安装jdk
 1.将jdk.tar.gz上传至自己创建的文件夹中
@@ -62,7 +66,6 @@ vim conf/zoo.cfg
  sudo apt install vim
 修改存储目录：
 dataDir=/???/ZooKeeper/zkdata
-
 7.启动zk
 在bin/目录下启动server
 ./zkServer.sh  start
@@ -84,15 +87,20 @@ tar xzf redis-6.0.4.tar.gz
 cd redis-6.0.4
 5.编译
 make
+    5.1若报错 pkg-config:not found，则安装pkg-config，即
+    sudo apt-get install pkg-config
 6.编译完成后进入src目录下
 cd src
 7.开启redis服务
 ./redis-server
 8.启动成功后会显示redis的pid，如有需要，按住crtl+c 可以退出服务.
+9.两种方式设置密码
+    a.在redis-cli客户端输入以下命令(无需重启服务)
+    config set requirepass 123456
+    b.redis的配置文件—redis.conf文件，然后修改里面的requirepass，这个本来是注释起来了的，将注释去掉，并将后面对应的字段设置成自己想要的密码，保存退出。重启redis服务，即可。
 
 
-
-# 安装yum命令
+# 安装yum命令（未成功）
 1.安装
 sudo apt install yum
 如果报错，在ubuntu下按顺序执行以下步骤
@@ -125,35 +133,33 @@ sudo apt-get install yum
 
 
 
-sudo apt update
+
+# 安装docker （未亲自尝试成功）
+1.安装（需要curl）
+curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
+    1.1若上面命令不行，可尝试：curl -sSL https://get.daocloud.io/docker | sh
+2.安装docker之后，暂时只能用root权限使用，根据提示，需要使用以下命令让普通用户可以使用
+dockerd-rootless-setuptool.sh install
+3.操作完成之后可能还需要添加环境变量（以命令行上的提示为准），将以下命令添加到~/.bashrc文件里
+export PATH=/usr/bin:$PATH
+export DOCKER_HOST=unix:///run/user/1000/docker.sock
+4.测试一下
+docker run hello-world
 
 
 # 解决 E: Unable to lock directory /var/lib/apt/lists/ 问题
 sudo fuser -vki /var/lib/apt/lists/lock
 
 
-# 安装docker 若下面命令不行，可尝试：curl -sSL https://get.daocloud.io/docker | sh
-curl -fsSL https://get.docker.com | bash -s docker --mirror Aliyun
-# 安装docker之后，暂时只能用root权限使用，根据提示，需要使用以下命令让普通用户可以使用
-dockerd-rootless-setuptool.sh install
-# 操作完成之后可能还需要添加环境变量（以命令行上的提示为准），将以下命令添加到~/.bashrc文件里
-export PATH=/usr/bin:$PATH
-export DOCKER_HOST=unix:///run/user/1000/docker.sock
-# 测试一下
-docker run hello-world
-
-
-
-
-# 1.linux常用命令
+# linux常用命令
 
 # 删除文件
 rm -f 文件名
 # 删除文件夹
 rm -rf 文件夹
 
-
-ping：查看与某主机是否能联通
+# 查看与某主机是否能联通
+ping：
 
 ps -ef|grep 进程名称：查看进程号
 
